@@ -293,6 +293,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [DexScreener](https://dexscreener.com/) for providing the API
 - [Anthropic](https://anthropic.com/) for the Model Context Protocol specification
+- [Janswist](https://github.com/janswist) for the inspiration
 - The Python async/await community for excellent async patterns
 
 ## 📞 Support
