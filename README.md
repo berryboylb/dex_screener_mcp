@@ -55,7 +55,8 @@ python main.py
 dexscreener-mcp/
 ├── README.md                       # README.md
 ├── requirements.txt                # Python dependencies
-├── dexscreener_client.py          # Core API client
+├── tools/
+|──    |── request.py              # Core API client
 ├── server.py                      # MCP server instance
 ├── main.py                        # Tool registration & server startup
 └── tools/                         # MCP tools directory
@@ -76,10 +77,10 @@ dexscreener-mcp/
 No environment variables are required by default. The server uses the public DexScreener API.
 
 ### Custom Configuration
-You can modify the base URL in `dexscreener_client.py`:
+You can modify the base URL in `utils/request.py`:
 ```python
 # Default: https://api.dexscreener.com
-DexScreenerClient(base_url='https://api.dexscreener.com')
+make_request(base_url='https://api.dexscreener.com')
 ```
 
 ## 🔧 Usage
