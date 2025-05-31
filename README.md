@@ -39,8 +39,8 @@ pip install mcp aiohttp, httx, requests
 ### Quick Setup
 ```bash
 # Clone or download the project
-git clone <your-repo-url>
-cd dexscreener-mcp
+git clone https://github.com/berryboylb/dex_screener_mcp
+cd dex_screener_mcp
 
 # Install dependencies
 pip install 
