@@ -1,10 +1,12 @@
 from agents import Agent, Runner, WebSearchTool
 from agents.tool import UserLocation
-from agents.mcp import MCPServerStdio
+from agents.mcp import MCPServerStdio, MCPServerSse
 from dotenv import load_dotenv
 import asyncio
 import json
+import logging
 
+logger = logging.getLogger(__name__)
 load_dotenv()
 
 PROMPT = """
@@ -43,7 +45,7 @@ PROMPT = """
 """
 
 
-async def main():
+async def run_local() -> None:
     async with MCPServerStdio(
         params={
             "command": "uv",
@@ -52,6 +54,14 @@ async def main():
             "env": {},  # optional environment variables
         }
     ) as server:
+
+        # tools = await server.list_tools()
+
+        # print("📋 Listing tools...")
+        # tools = await server.list_tools()
+        # print(f"Found {len(tools)} tools:")
+        # for tool in tools:
+        #     print(f"  - {tool.name}: {tool.description}")
 
         agent = Agent(
             name="dex_screener",
@@ -79,6 +89,50 @@ async def main():
                 input=user_input,
             )
             print(">>> response <<<", result.final_output)
+
+
+async def run_sse() -> None:
+    logger.info("Using SSE protocol for mcp")
+    URL = "http://0.0.0.0:5001/sse"
+    server = MCPServerSse({"url": URL})
+
+    try:
+        await server.connect()
+        agent = Agent(
+            name="dex_screener",
+            instructions=PROMPT,
+            model="gpt-4o-mini",
+            tools=[
+                WebSearchTool(
+                    search_context_size="high",
+                    user_location=UserLocation(
+                        type="approximate",
+                    ),
+                ),
+            ],
+            mcp_servers=[server],
+        )
+
+        while True:
+            user_input = input("Ask your questions: ")
+            if user_input.lower() == "exit":
+                print("Bye")
+                break
+
+            result = await Runner.run(
+                agent,
+                input=user_input,
+            )
+            print(">>> response <<<", result.final_output)
+    finally:
+        await server.cleanup()
+
+
+async def main(local: True) -> None:
+    if local:
+        run_local()
+    else:
+       await run_sse()
 
 
 async def debug_connection():
@@ -112,4 +166,4 @@ async def debug_connection():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(main(local=False))
