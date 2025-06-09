@@ -130,7 +130,7 @@ async def run_sse() -> None:
 
 async def main(local: True) -> None:
     if local:
-        run_local()
+       await run_local()
     else:
        await run_sse()
 
