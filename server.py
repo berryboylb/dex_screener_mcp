@@ -1,3 +1,3 @@
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 
-mcp = FastMCP("dex_screener_mcp")
+mcp = FastMCP(name="dex_screener_mcp", instructions="")
